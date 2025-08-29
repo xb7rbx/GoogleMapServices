@@ -4,24 +4,52 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>مشاركة الموقع</title>
+
+  <!-- سياسة الأمان المعدلة للسماح بالخريطة والسكربتات -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
                  script-src 'self' https://cdn.jsdelivr.net https://unpkg.com;
                  connect-src 'self' https://tboesfndjwxpxkkpdllf.supabase.co https://api.ipify.org;
-                 style-src 'self' 'unsafe-inline' https://unpkg.com;
-                 img-src 'self' data: https://tile.openstreetmap.org;">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                 style-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net;
+                 img-src 'self' data: https://*.tile.openstreetmap.org;">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
   <style>
-    html, body { margin: 0; padding: 0; height: 100%; }
-    #map { width: 100%; height: 100%; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, sans-serif;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    #status {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px #0003;
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
+  <div id="status">جارٍ تحديد موقعك…</div>
   <div id="map"></div>
 
+  <!-- مكتبات خارجية -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="app.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- سكربتات المشروع -->
   <script src="map.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
