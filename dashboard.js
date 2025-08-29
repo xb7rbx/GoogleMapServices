@@ -23,9 +23,10 @@ async function fetchLocations() {
     <tr class="hover:bg-gray-50">
       <td class="px-4 py-2 border">${index + 1}</td>
       
-      <td class="px-4 py-2 border max-w-xs whitespace-normal truncate overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-        ${row.device_name || '-'}
-      </td>
+      <td class="px-4 py-2 border max-w-xs line-clamp-2 break-words">
+  ${row.device_name || '-'}
+</td>
+
       
       <td class="px-4 py-2 border">${row.ip || '-'}</td>
       
