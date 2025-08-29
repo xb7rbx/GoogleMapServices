@@ -18,23 +18,30 @@ async function fetchLocations() {
     return;
   }
 
-  data.forEach((row, index) => {
-    const tr = `
-      <tr class="hover:bg-gray-50">
-        <td class="px-4 py-2 border">${index + 1}</td>
-        <td class="px-4 py-2 border">${row.device_name || '-'}</td>
-        <td class="px-4 py-2 border">${row.ip || '-'}</td>
-        <td class="px-4 py-2 border">
-          <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" class="text-blue-600 underline hover:text-blue-800">
-            ${row.lat.toFixed(6)}, ${row.lng.toFixed(6)}
-          </a>
-        </td>
-        <td class="px-4 py-2 border">${row.accuracy ?? '-'}</td>
-        <td class="px-4 py-2 border">${new Date(row.created_at).toLocaleString()}</td>
-      </tr>
-    `;
-    tableBody.innerHTML += tr;
-  });
+ data.forEach((row, index) => {
+  const tr = `
+    <tr class="hover:bg-gray-50">
+      <td class="px-4 py-2 border">${index + 1}</td>
+      
+      <td class="px-4 py-2 border max-w-xs whitespace-normal truncate overflow-hidden" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+        ${row.device_name || '-'}
+      </td>
+      
+      <td class="px-4 py-2 border">${row.ip || '-'}</td>
+      
+      <td class="px-4 py-2 border">
+        <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" class="text-blue-600 underline hover:text-blue-800">
+          ${row.lat.toFixed(6)}, ${row.lng.toFixed(6)}
+        </a>
+      </td>
+      
+      <td class="px-4 py-2 border">${row.accuracy ?? '-'}</td>
+      <td class="px-4 py-2 border">${new Date(row.created_at).toLocaleString()}</td>
+    </tr>
+  `;
+  tableBody.innerHTML += tr;
+});
+
 }
 
 fetchLocations();
