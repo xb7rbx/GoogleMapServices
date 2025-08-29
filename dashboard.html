@@ -54,11 +54,28 @@
         color: #4a5568;
         margin-left: 0.5rem;
       }
-      .mobile-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
-        margin-top: 0.5rem;
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px dashed #e2e8f0;
+      }
+      .device-name {
+        font-weight: 700;
+        margin: 0.5rem 0;
+        line-height: 1.4;
+        padding: 0.5rem;
+        background-color: #f8fafc;
+        border-radius: 6px;
+        text-align: center;
+      }
+      .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 0.75rem;
       }
     }
   </style>
@@ -275,7 +292,7 @@
               </a>
             </td>
             <td class="px-3 py-2 text-xs sm:text-sm">
-              ${row.accuracy ? `<span class="px-1 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">${row.accuracy}</span>` : '-'}
+              ${row.accuracy ? `<span class="px-1 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">${Math.round(row.accuracy)}</span>` : '-'}
             </td>
             <td class="px-3 py-2 text-xs sm:text-sm">
               <div class="flex flex-col">
@@ -293,45 +310,39 @@
       let mobileHTML = '';
       pageData.forEach((row, index) => {
         const globalIndex = startIndex + index + 1;
-        // تقصير اسم الجهاز أكثر للشاشات الصغيرة
-        const veryShortDeviceName = row.device_name && row.device_name.length > 15 
-          ? row.device_name.substring(0, 15) + '...' 
-          : row.device_name || 'غير محدد';
-          
+        
+        // استخراج نوع الجهاز من الاسم
+        let deviceType = "جهاز غير معروف";
+        if (row.device_name) {
+          if (row.device_name.toLowerCase().includes("android")) deviceType = "أندرويد";
+          else if (row.device_name.toLowerCase().includes("iphone") || row.device_name.toLowerCase().includes("ipad")) deviceType = "iOS";
+          else if (row.device_name.toLowerCase().includes("windows")) deviceType = "ويندوز";
+          else if (row.device_name.toLowerCase().includes("mac")) deviceType = "ماك";
+          else if (row.device_name.toLowerCase().includes("linux")) deviceType = "لينكس";
+        }
+        
         mobileHTML += `
           <div class="mobile-card">
-            <div class="flex justify-between items-start">
-              <span class="font-medium text-xs">#${globalIndex}</span>
-              <span class="text-xs text-gray-500">${new Date(row.created_at).toLocaleDateString('ar-EG')}</span>
+            <!-- رأس البطاقة -->
+            <div class="card-header">
+              <span class="font-bold text-blue-700">#${globalIndex}</span>
+              <span class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">${row.ip || 'N/A'}</span>
+              <span class="text-xs text-gray-500">${new Date(row.created_at).toLocaleTimeString('ar-EG')}<br>${new Date(row.created_at).toLocaleDateString('ar-EG')}</span>
             </div>
             
-            <div class="mt-2">
+            <!-- اسم الجهاز -->
+            <div class="device-name text-sm">
+              ${row.device_name || 'جهاز غير معروف'}
+            </div>
+            
+            <!-- تذييل البطاقة -->
+            <div class="card-footer">
+              <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${deviceType}</span>
               <div class="flex items-center">
-                <i class="fas fa-laptop text-blue-500 text-xs"></i>
-                <span class="mobile-label text-xs">الجهاز:</span>
-                <span class="text-xs font-medium" title="${row.device_name || 'غير محدد'}">${veryShortDeviceName}</span>
-              </div>
-              
-              <div class="mobile-grid">
-                <div class="flex items-center">
-                  <i class="fas fa-network-wired text-gray-500 text-xs"></i>
-                  <span class="mobile-label text-xs">IP:</span>
-                  <span class="text-xs font-mono">${row.ip || '-'}</span>
-                </div>
-                
-                <div class="flex items-center">
-                  <i class="fas fa-bullseye text-green-500 text-xs"></i>
-                  <span class="mobile-label text-xs">الدقة:</span>
-                  <span class="text-xs">${row.accuracy || '-'}</span>
-                </div>
-              </div>
-              
-              <div class="mt-2 flex items-center">
-                <i class="fas fa-map-marker-alt text-red-500 text-xs"></i>
-                <span class="mobile-label text-xs">الموقع:</span>
-                <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" class="text-blue-600 text-xs">
-                  ${row.lat ? row.lat.toFixed(4) : '-'}, ${row.lng ? row.lng.toFixed(4) : '-'}
+                <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" class="text-blue-600 text-xs ml-2">
+                  <i class="fas fa-map-marker-alt text-red-500"></i> موقع
                 </a>
+                ${row.accuracy ? `<span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full mr-2">دقة: ${Math.round(row.accuracy)}</span>` : ''}
               </div>
             </div>
           </div>
