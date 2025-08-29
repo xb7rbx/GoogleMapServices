@@ -26,6 +26,8 @@ function getLocation(timeout = 25000) {
 
 async function storeLocation() {
   const status = document.getElementById("status");
+  status.innerText = "⏳ جاري تحديد الموقع…";
+
   try {
     const coords = await getLocation();
     const ip = await getIP();
