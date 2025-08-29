@@ -10,12 +10,16 @@
   
   <!-- سياسة الأمان -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self';
-                 script-src 'self' https://cdn.jsdelivr.net https://unpkg.com;
-                 connect-src 'self' https://tboesfndjwxpxkkpdllf.supabase.co https://api.ipify.org;
-                 style-src 'self' https://unpkg.com 'unsafe-inline';
-                 img-src 'self' data: https://tile.openstreetmap.org;
-                 frame-src *;">
+      content="
+        default-src 'self';
+        script-src 'self' https://cdn.jsdelivr.net https://unpkg.com;
+        connect-src 'self' https://tboesfndjwxpxkkpdllf.supabase.co https://api.ipify.org;
+        style-src 'self' 'unsafe-inline' https://unpkg.com;
+        img-src 'self' data: https://tile.openstreetmap.org;
+        font-src 'self' https://unpkg.com;
+        frame-src *;
+      ">
+
 
   <style>
     html, body { margin:0; padding:0; height:100%; }
