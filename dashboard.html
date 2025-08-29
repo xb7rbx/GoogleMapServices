@@ -3,27 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة التحكم - تحديد المواقع</title>
+  <title>لوحة التحكم - المواقع</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans p-4">
 
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-2xl font-bold mb-6 text-center text-blue-600">لوحة التحكم - المواقع المحفوظة</h1>
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center text-blue-600">📍 لوحة التحكم - المواقع المحفوظة</h1>
 
-    <div id="locationTable" class="bg-white shadow-md rounded-lg overflow-x-auto">
-      <table class="min-w-full text-sm text-right">
-        <thead class="bg-blue-50">
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+      <table class="min-w-full table-auto text-sm text-right border">
+        <thead class="bg-blue-100 text-gray-800">
           <tr>
             <th class="px-4 py-2 border">#</th>
+            <th class="px-4 py-2 border">الجهاز</th>
+            <th class="px-4 py-2 border">IP</th>
             <th class="px-4 py-2 border">خط العرض</th>
             <th class="px-4 py-2 border">خط الطول</th>
+            <th class="px-4 py-2 border">الدقة (متر)</th>
             <th class="px-4 py-2 border">تاريخ الإضافة</th>
           </tr>
         </thead>
         <tbody id="tableBody">
-          <!-- سيتم ملء الصفوف من JavaScript -->
+          <!-- سيتم تعبئة الصفوف من JavaScript -->
         </tbody>
       </table>
     </div>
