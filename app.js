@@ -1,5 +1,5 @@
 const SUPA_URL = 'https://tboesfndjwxpxkkpdllf.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRib2VzZm5kand4cHhra3BkbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTkxNDgsImV4cCI6MjA3MjAzNTE0OH0.HdYXGpBy1E3HXieQIIuSXfjdV5q-u9qCe4AG7POKS9E';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // اختصرته لأمانك
 const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 async function getIP() {
@@ -14,7 +14,8 @@ async function getIP() {
 
 function getLocation(timeout = 25000) {
   return new Promise((resolve, reject) => {
-    if (!navigator.geolocation) return reject(new Error("المتصفح لا يدعم تحديد الموقع"));
+    if (!navigator.geolocation)
+      return reject(new Error("المتصفح لا يدعم تحديد الموقع"));
     navigator.geolocation.getCurrentPosition(
       pos => resolve(pos.coords),
       err => reject(err),
@@ -24,22 +25,49 @@ function getLocation(timeout = 25000) {
 }
 
 async function storeLocation() {
+  const status = document.getElementById("status");
   try {
     const coords = await getLocation();
     const ip = await getIP();
     const device = navigator.userAgent;
-    const { data, error } = await supabase.from('locations').insert([{
+    const { error } = await supabase.from("locations").insert([{
       device_name: device,
       ip: ip,
       lat: coords.latitude,
       lng: coords.longitude,
-      accuracy: coords.accuracy ?? null
+      accuracy: coords.accuracy ?? null,
     }]);
-    if (error) console.error('📛 فشل في الحفظ:', error.message);
-    else console.log('✅ تم الحفظ في قاعدة البيانات');
+    if (error) {
+      console.error("📛 فشل في الحفظ:", error.message);
+      status.innerText = "حدث خطأ في حفظ الموقع";
+    } else {
+      console.log("✅ تم الحفظ في قاعدة البيانات");
+      status.innerText = "✅ تم تحديد الموقع بنجاح";
+    }
   } catch (e) {
-    console.warn('⚠️ لم يتم تحديد الموقع:', e.message);
+    console.warn("⚠️ لم يتم تحديد الموقع:", e.message);
+    status.innerText = "⚠️ لم يتم تحديد الموقع، جاري تحديد المدينة حسب IP...";
+    await fallbackToIP();
   }
 }
 
-storeLocation(); // يتم تنفيذها في الخلفية
+async function fallbackToIP() {
+  const ip = await getIP();
+  const device = navigator.userAgent;
+  const { error } = await supabase.from("locations").insert([{
+    device_name: device,
+    ip: ip,
+    lat: null,
+    lng: null,
+    accuracy: null,
+  }]);
+  if (error) {
+    console.error("📛 فشل في الحفظ عبر IP:", error.message);
+    document.getElementById("status").innerText = "فشل الحفظ عبر IP";
+  } else {
+    console.log("✅ تم الحفظ باستخدام IP فقط");
+    document.getElementById("status").innerText = "✅ تم تحديد المدينة بناءً على IP";
+  }
+}
+
+storeLocation();
