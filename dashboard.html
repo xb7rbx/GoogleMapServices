@@ -25,12 +25,6 @@
     }
     .table-row:hover {
       background-color: #f8fafc;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03);
-    }
-    .sortable:hover {
-      background-color: #edf2f7;
-      cursor: pointer;
     }
     .loading-spinner {
       border: 4px solid #f3f3f3;
@@ -45,90 +39,65 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    .pagination-btn {
-      transition: all 0.2s ease;
-    }
-    .pagination-btn:hover:not(.disabled) {
-      background-color: #4b6cb7;
-      color: white;
-    }
-    .filter-active {
-      background-color: #4b6cb7;
-      color: white;
+    
+    /* تصميم للشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .mobile-card {
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1rem;
+      }
+      .mobile-card:last-child {
+        border-bottom: none;
+      }
+      .mobile-label {
+        font-weight: 600;
+        color: #4a5568;
+        margin-left: 0.5rem;
+      }
+      .mobile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+      }
     }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-  <div class="max-w-full mx-auto px-4 py-8">
+  <div class="max-w-full mx-auto px-2 py-4 sm:px-4 sm:py-6">
     <!-- ترويسة الصفحة -->
-    <div class="text-center mb-8">
-      <h1 class="text-2xl md:text-3xl font-bold text-blue-800 mb-2">سجل المواقع والجهاز</h1>
-      <p class="text-gray-600 max-w-3xl mx-auto">عرض جميع سجلات المواقع المسجلة من قبل الأجهزة مع إمكانية التصفية والترتيب</p>
+    <div class="text-center mb-4 sm:mb-6">
+      <h1 class="text-xl sm:text-2xl font-bold text-blue-800 mb-1">سجل المواقع والجهاز</h1>
+      <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">عرض جميع سجلات المواقع المسجلة من قبل الأجهزة</p>
     </div>
 
     <!-- بطاقة الجدول -->
     <div class="bg-white table-container">
-      <!-- ترويسة الجدول مع خيارات التصفية -->
-      <div class="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200">
+      <!-- ترويسة الجدول -->
+      <div class="p-3 border-b border-gray-200">
         <div class="flex items-center">
-          <div class="bg-blue-100 p-2 rounded-lg mr-3">
-            <i class="fas fa-table text-blue-600 text-lg"></i>
+          <div class="bg-blue-100 p-2 rounded-lg mr-2">
+            <i class="fas fa-table text-blue-600 text-sm sm:text-lg"></i>
           </div>
           <div>
-            <h2 class="font-semibold text-lg">سجل المواقع</h2>
-            <p class="text-sm text-gray-500">إجمالي السجلات: <span id="totalRecords">0</span></p>
-          </div>
-        </div>
-        
-        <div class="flex flex-wrap gap-2">
-          <div class="relative">
-            <select id="sortSelect" class="py-2 pl-9 pr-4 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-              <option value="newest">الأحدث أولاً</option>
-              <option value="oldest">الأقدم أولاً</option>
-              <option value="accuracy">حسب الدقة</option>
-            </select>
-            <i class="fas fa-sort absolute right-3 top-3 text-gray-500"></i>
-          </div>
-          
-          <div class="relative">
-            <input type="text" id="searchInput" placeholder="ابحث..." class="py-2 pr-9 pl-4 bg-gray-100 border-0 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
-            <i class="fas fa-search absolute left-3 top-3 text-gray-500"></i>
+            <h2 class="font-semibold text-sm sm:text-lg">سجل المواقع</h2>
+            <p class="text-xs sm:text-sm text-gray-500">إجمالي السجلات: <span id="totalRecords">0</span></p>
           </div>
         </div>
       </div>
 
-      <!-- الجدول -->
-      <div class="overflow-x-auto">
+      <!-- الجدول للشاشات الكبيرة -->
+      <div class="hidden sm:block overflow-x-auto">
         <table class="w-full border-collapse">
           <thead>
             <tr class="table-header text-white">
-              <th class="px-4 py-3 text-center whitespace-nowrap">#</th>
-              <th class="px-4 py-3 text-right whitespace-nowrap sortable" data-sort="device_name">
-                <div class="flex items-center justify-end">
-                  <span>اسم الجهاز</span>
-                  <i class="fas fa-sort ml-2 text-sm"></i>
-                </div>
-              </th>
-              <th class="px-4 py-3 text-center whitespace-nowrap sortable" data-sort="ip">
-                <div class="flex items-center justify-center">
-                  <span>IP</span>
-                  <i class="fas fa-sort ml-2 text-sm"></i>
-                </div>
-              </th>
-              <th class="px-4 py-3 text-center whitespace-nowrap">الموقع</th>
-              <th class="px-4 py-3 text-center whitespace-nowrap sortable" data-sort="accuracy">
-                <div class="flex items-center justify-center">
-                  <span>الدقة</span>
-                  <i class="fas fa-sort ml-2 text-sm"></i>
-                </div>
-              </th>
-              <th class="px-4 py-3 text-center whitespace-nowrap sortable" data-sort="created_at">
-                <div class="flex items-center justify-center">
-                  <span>تاريخ الإضافة</span>
-                  <i class="fas fa-sort ml-2 text-sm"></i>
-                </div>
-              </th>
+              <th class="px-3 py-2 text-center whitespace-nowrap text-xs sm:text-sm">#</th>
+              <th class="px-3 py-2 text-right whitespace-nowrap text-xs sm:text-sm">اسم الجهاز</th>
+              <th class="px-3 py-2 text-center whitespace-nowrap text-xs sm:text-sm">IP</th>
+              <th class="px-3 py-2 text-center whitespace-nowrap text-xs sm:text-sm">الموقع</th>
+              <th class="px-3 py-2 text-center whitespace-nowrap text-xs sm:text-sm">الدقة</th>
+              <th class="px-3 py-2 text-center whitespace-nowrap text-xs sm:text-sm">تاريخ الإضافة</th>
             </tr>
           </thead>
           <tbody id="tableBody" class="text-center">
@@ -137,71 +106,68 @@
         </table>
       </div>
 
+      <!-- عرض للشاشات الصغيرة -->
+      <div id="mobileView" class="sm:hidden">
+        <!-- سيتم تعبئته من JavaScript -->
+      </div>
+
       <!-- حالة التحميل -->
-      <div id="loadingIndicator" class="py-10">
+      <div id="loadingIndicator" class="py-8">
         <div class="loading-spinner"></div>
-        <p class="text-center mt-3 text-gray-600">جاري تحميل البيانات...</p>
+        <p class="text-center mt-3 text-gray-600 text-sm">جاري تحميل البيانات...</p>
       </div>
 
       <!-- تذييل الجدول مع الترقيم -->
-      <div class="p-4 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div class="text-sm text-gray-600">
+      <div class="p-3 border-t border-gray-200 flex items-center justify-between">
+        <div class="text-xs text-gray-600">
           عرض <span id="currentItems">0</span> من <span id="totalItems">0</span> عنصر
         </div>
         
-        <div class="flex items-center gap-2">
-          <button id="prevPage" class="pagination-btn p-2 rounded-lg bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+        <div class="flex items-center gap-1">
+          <button id="prevPage" class="p-1 sm:p-2 rounded bg-gray-100 disabled:opacity-50 text-xs sm:text-sm" disabled>
             <i class="fas fa-chevron-right"></i>
           </button>
           
-          <div class="flex gap-1">
-            <span class="px-3 py-1 bg-blue-500 text-white rounded-lg">1</span>
+          <div class="flex gap-1 mx-1">
+            <span class="px-2 py-1 bg-blue-500 text-white rounded text-xs">1</span>
           </div>
           
-          <button id="nextPage" class="pagination-btn p-2 rounded-lg bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          <button id="nextPage" class="p-1 sm:p-2 rounded bg-gray-100 disabled:opacity-50 text-xs sm:text-sm" disabled>
             <i class="fas fa-chevron-left"></i>
           </button>
-        </div>
-        
-        <div class="text-sm text-gray-600">
-          <select id="pageSize" class="py-1 px-2 bg-gray-100 border-0 rounded-lg">
-            <option value="10">10 لكل صفحة</option>
-            <option value="20">20 لكل صفحة</option>
-            <option value="50">50 لكل صفحة</option>
-          </select>
         </div>
       </div>
     </div>
 
-    <!-- معلومات إضافية -->
-    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white p-4 rounded-lg shadow-sm flex items-center">
-        <div class="bg-green-100 p-3 rounded-lg ml-3">
-          <i class="fas fa-map-marker-alt text-green-600 text-xl"></i>
+    <!-- معلومات إضافية للشاشات المتوسطة والكبيرة فقط -->
+    <div class="mt-4 hidden sm:grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div class="bg-white p-3 rounded-lg shadow-sm flex items-center">
+        <div class="bg-green-100 p-2 rounded-lg ml-2">
+          <i class="fas fa-map-marker-alt text-green-600"></i>
         </div>
         <div>
-          <p class="text-sm text-gray-500">الموقع الأخير</p>
-          <p class="font-medium" id="lastLocation">--</p>
+          <p class="text-xs text-gray-500">الموقع الأخير</p>
+          <p class="font-medium text-sm" id="lastLocation">--</p>
         </div>
       </div>
       
-      <div class="bg-white p-4 rounded-lg shadow-sm flex items-center">
-        <div class="bg-blue-100 p-3 rounded-lg ml-3">
-          <i class="fas fa-laptop text-blue-600 text-xl"></i>
+      <div class="bg-white p-3 rounded-lg shadow-sm flex items-center">
+        <div class="bg-blue-100 p-2 rounded-lg ml-2">
+          <i class="fas fa-laptop text-blue-600"></i>
         </div>
         <div>
-          <p class="text-sm text-gray-500">عدد الأجهزة</p>
-          <p class="font-medium" id="devicesCount">--</p>
+          <p class="text-xs text-gray-500">عدد الأجهزة</p>
+          <p class="font-medium text-sm" id="devicesCount">--</p>
         </div>
       </div>
       
-      <div class="bg-white p-4 rounded-lg shadow-sm flex items-center">
-        <div class="bg-purple-100 p-3 rounded-lg ml-3">
-          <i class="fas fa-clock text-purple-600 text-xl"></i>
+      <div class="bg-white p-3 rounded-lg shadow-sm flex items-center">
+        <div class="bg-purple-100 p-2 rounded-lg ml-2">
+          <i class="fas fa-clock text-purple-600"></i>
         </div>
         <div>
-          <p class="text-sm text-gray-500">أحدث تحديث</p>
-          <p class="font-medium" id="lastUpdate">--</p>
+          <p class="text-xs text-gray-500">أحدث تحديث</p>
+          <p class="font-medium text-sm" id="lastUpdate">--</p>
         </div>
       </div>
     </div>
@@ -215,8 +181,6 @@
     let allData = [];
     let currentPage = 1;
     let pageSize = 10;
-    let sortField = 'created_at';
-    let sortDirection = 'desc';
 
     async function loadData() {
       showLoading(true);
@@ -224,20 +188,27 @@
       const { data, error } = await supabase
         .from('locations')
         .select('*')
-        .order(sortField, { ascending: sortDirection === 'asc' });
+        .order('created_at', { ascending: false });
       
       if (error) {
         document.getElementById('tableBody').innerHTML = `
           <tr>
-            <td colspan="6" class="px-4 py-8 text-center text-red-600">
+            <td colspan="6" class="px-3 py-6 text-center text-red-600 text-sm">
               <div class="flex flex-col items-center justify-center">
-                <i class="fas fa-exclamation-circle text-3xl mb-2"></i>
+                <i class="fas fa-exclamation-circle text-xl mb-2"></i>
                 <p>حدث خطأ في جلب البيانات</p>
-                <p class="text-sm mt-2 text-gray-500">${error.message}</p>
               </div>
             </td>
           </tr>
         `;
+        
+        document.getElementById('mobileView').innerHTML = `
+          <div class="p-4 text-center text-red-600 text-sm">
+            <i class="fas fa-exclamation-circle text-xl mb-2"></i>
+            <p>حدث خطأ في جلب البيانات</p>
+          </div>
+        `;
+        
         showLoading(false);
         return;
       }
@@ -250,6 +221,7 @@
 
     function renderTable() {
       const tableBody = document.getElementById('tableBody');
+      const mobileView = document.getElementById('mobileView');
       const startIndex = (currentPage - 1) * pageSize;
       const endIndex = startIndex + pageSize;
       const pageData = allData.slice(startIndex, endIndex);
@@ -257,42 +229,55 @@
       if (pageData.length === 0) {
         tableBody.innerHTML = `
           <tr>
-            <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+            <td colspan="6" class="px-3 py-6 text-center text-gray-500 text-sm">
               <div class="flex flex-col items-center justify-center">
-                <i class="fas fa-inbox text-3xl mb-2 opacity-50"></i>
+                <i class="fas fa-inbox text-xl mb-2 opacity-50"></i>
                 <p>لا توجد بيانات لعرضها</p>
               </div>
             </td>
           </tr>
         `;
+        
+        mobileView.innerHTML = `
+          <div class="p-4 text-center text-gray-500 text-sm">
+            <i class="fas fa-inbox text-xl mb-2 opacity-50"></i>
+            <p>لا توجد بيانات لعرضها</p>
+          </div>
+        `;
+        
         return;
       }
       
+      // عرض الجدول للشاشات الكبيرة
       let tableHTML = '';
-      
       pageData.forEach((row, index) => {
         const globalIndex = startIndex + index + 1;
+        // تقصير اسم الجهاز إذا كان طويلاً
+        const shortDeviceName = row.device_name && row.device_name.length > 20 
+          ? row.device_name.substring(0, 20) + '...' 
+          : row.device_name || 'غير محدد';
+          
         tableHTML += `
-          <tr class="table-row border-b border-gray-100 hover:bg-gray-50 transition-all duration-150">
-            <td class="px-4 py-3 font-medium">${globalIndex}</td>
-            <td class="px-4 py-3 text-right">
+          <tr class="table-row border-b border-gray-100">
+            <td class="px-3 py-2 font-medium text-xs sm:text-sm">${globalIndex}</td>
+            <td class="px-3 py-2 text-right text-xs sm:text-sm" title="${row.device_name || 'غير محدد'}">
               <div class="flex items-center justify-end">
-                <i class="fas fa-laptop ml-2 text-blue-500"></i>
-                <span class="max-w-xs line-clamp-2 break-words">${row.device_name || 'غير محدد'}</span>
+                <i class="fas fa-laptop ml-1 text-blue-500 text-xs"></i>
+                <span>${shortDeviceName}</span>
               </div>
             </td>
-            <td class="px-4 py-3 font-mono">${row.ip || '-'}</td>
-            <td class="px-4 py-3">
+            <td class="px-3 py-2 font-mono text-xs sm:text-sm">${row.ip || '-'}</td>
+            <td class="px-3 py-2 text-xs sm:text-sm">
               <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" 
-                 class="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors duration-150">
-                <i class="fas fa-map-marker-alt ml-1 text-red-500"></i>
-                ${row.lat ? row.lat.toFixed(6) : '-'}, ${row.lng ? row.lng.toFixed(6) : '-'}
+                 class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                <i class="fas fa-map-marker-alt ml-1 text-red-500 text-xs"></i>
+                ${row.lat ? row.lat.toFixed(4) : '-'}, ${row.lng ? row.lng.toFixed(4) : '-'}
               </a>
             </td>
-            <td class="px-4 py-3">
-              ${row.accuracy ? `<span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">${row.accuracy}</span>` : '-'}
+            <td class="px-3 py-2 text-xs sm:text-sm">
+              ${row.accuracy ? `<span class="px-1 py-0.5 bg-green-100 text-green-800 rounded-full text-xs">${row.accuracy}</span>` : '-'}
             </td>
-            <td class="px-4 py-3">
+            <td class="px-3 py-2 text-xs sm:text-sm">
               <div class="flex flex-col">
                 <span>${new Date(row.created_at).toLocaleDateString('ar-EG')}</span>
                 <span class="text-xs text-gray-500">${new Date(row.created_at).toLocaleTimeString('ar-EG')}</span>
@@ -303,6 +288,57 @@
       });
       
       tableBody.innerHTML = tableHTML;
+      
+      // عرض البطاقات للشاشات الصغيرة
+      let mobileHTML = '';
+      pageData.forEach((row, index) => {
+        const globalIndex = startIndex + index + 1;
+        // تقصير اسم الجهاز أكثر للشاشات الصغيرة
+        const veryShortDeviceName = row.device_name && row.device_name.length > 15 
+          ? row.device_name.substring(0, 15) + '...' 
+          : row.device_name || 'غير محدد';
+          
+        mobileHTML += `
+          <div class="mobile-card">
+            <div class="flex justify-between items-start">
+              <span class="font-medium text-xs">#${globalIndex}</span>
+              <span class="text-xs text-gray-500">${new Date(row.created_at).toLocaleDateString('ar-EG')}</span>
+            </div>
+            
+            <div class="mt-2">
+              <div class="flex items-center">
+                <i class="fas fa-laptop text-blue-500 text-xs"></i>
+                <span class="mobile-label text-xs">الجهاز:</span>
+                <span class="text-xs font-medium" title="${row.device_name || 'غير محدد'}">${veryShortDeviceName}</span>
+              </div>
+              
+              <div class="mobile-grid">
+                <div class="flex items-center">
+                  <i class="fas fa-network-wired text-gray-500 text-xs"></i>
+                  <span class="mobile-label text-xs">IP:</span>
+                  <span class="text-xs font-mono">${row.ip || '-'}</span>
+                </div>
+                
+                <div class="flex items-center">
+                  <i class="fas fa-bullseye text-green-500 text-xs"></i>
+                  <span class="mobile-label text-xs">الدقة:</span>
+                  <span class="text-xs">${row.accuracy || '-'}</span>
+                </div>
+              </div>
+              
+              <div class="mt-2 flex items-center">
+                <i class="fas fa-map-marker-alt text-red-500 text-xs"></i>
+                <span class="mobile-label text-xs">الموقع:</span>
+                <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" class="text-blue-600 text-xs">
+                  ${row.lat ? row.lat.toFixed(4) : '-'}, ${row.lng ? row.lng.toFixed(4) : '-'}
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      mobileView.innerHTML = mobileHTML;
       updatePagination();
     }
 
@@ -320,7 +356,7 @@
       totalItems.textContent = allData.length;
       
       // تحديث أرقام الصفحات
-      const pageNumbers = document.querySelector('.flex.gap-1');
+      const pageNumbers = document.querySelector('.flex.gap-1.mx-1');
       let pageHTML = '';
       
       const startPage = Math.max(1, currentPage - 1);
@@ -328,7 +364,7 @@
       
       for (let i = startPage; i <= endPage; i++) {
         pageHTML += `
-          <button class="w-8 h-8 rounded-lg flex items-center justify-center ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-100'}" data-page="${i}">
+          <button class="w-6 h-6 rounded flex items-center justify-center text-xs ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-100'}" data-page="${i}">
             ${i}
           </button>
         `;
@@ -337,7 +373,7 @@
       pageNumbers.innerHTML = pageHTML;
       
       // إضافة event listeners لأزرار الصفحات
-      document.querySelectorAll('.flex.gap-1 button').forEach(btn => {
+      document.querySelectorAll('.flex.gap-1.mx-1 button').forEach(btn => {
         btn.addEventListener('click', () => {
           currentPage = parseInt(btn.dataset.page);
           renderTable();
@@ -359,39 +395,17 @@
           `${lastLocation.lat ? lastLocation.lat.toFixed(4) : '-'}, ${lastLocation.lng ? lastLocation.lng.toFixed(4) : '-'}`;
         
         document.getElementById('lastUpdate').textContent = 
-          new Date(lastLocation.created_at).toLocaleString('ar-EG');
+          new Date(lastLocation.created_at).toLocaleDateString('ar-EG');
       }
     }
 
     function showLoading(show) {
       document.getElementById('loadingIndicator').style.display = show ? 'block' : 'none';
       document.getElementById('tableBody').style.display = show ? 'none' : 'table-row-group';
+      document.getElementById('mobileView').style.display = show ? 'none' : 'block';
     }
 
     function initEventListeners() {
-      // التصنيف عند النقر على عناوين الأعمدة
-      document.querySelectorAll('.sortable').forEach(header => {
-        header.addEventListener('click', () => {
-          const field = header.dataset.sort;
-          
-          if (sortField === field) {
-            sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-          } else {
-            sortField = field;
-            sortDirection = 'desc';
-          }
-          
-          loadData();
-        });
-      });
-      
-      // تغيير حجم الصفحة
-      document.getElementById('pageSize').addEventListener('change', (e) => {
-        pageSize = parseInt(e.target.value);
-        currentPage = 1;
-        renderTable();
-      });
-      
       // أزرار التصفح
       document.getElementById('prevPage').addEventListener('click', () => {
         if (currentPage > 1) {
@@ -406,49 +420,6 @@
           currentPage++;
           renderTable();
         }
-      });
-      
-      // البحث
-      document.getElementById('searchInput').addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        
-        if (searchTerm) {
-          const filteredData = allData.filter(item => 
-            (item.device_name && item.device_name.toLowerCase().includes(searchTerm)) ||
-            (item.ip && item.ip.includes(searchTerm)) ||
-            (item.lat && item.lat.toString().includes(searchTerm)) ||
-            (item.lng && item.lng.toString().includes(searchTerm))
-          );
-          
-          allData = filteredData;
-        } else {
-          // إذا كان حقل البحث فارغًا، نعيد تحميل البيانات الأصلية
-          loadData();
-          return;
-        }
-        
-        currentPage = 1;
-        renderTable();
-      });
-      
-      // التصنيف حسب القائمة المنسدلة
-      document.getElementById('sortSelect').addEventListener('change', (e) => {
-        switch(e.target.value) {
-          case 'newest':
-            sortField = 'created_at';
-            sortDirection = 'desc';
-            break;
-          case 'oldest':
-            sortField = 'created_at';
-            sortDirection = 'asc';
-            break;
-          case 'accuracy':
-            sortField = 'accuracy';
-            sortDirection = 'desc';
-            break;
-        }
-        
-        loadData();
       });
     }
 
