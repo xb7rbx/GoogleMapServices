@@ -18,19 +18,23 @@ async function loadLocations() {
   tbody.innerHTML = '';
 
   data.forEach((row, index) => {
-    const tr = `
-      <tr class="hover:bg-gray-50">
-        <td class="px-4 py-2 border">${index + 1}</td>
-        <td class="px-4 py-2 border">${row.device_name || '-'}</td>
-        <td class="px-4 py-2 border">${row.ip || '-'}</td>
-        <td class="px-4 py-2 border">${row.lat}</td>
-        <td class="px-4 py-2 border">${row.lng}</td>
-        <td class="px-4 py-2 border">${row.accuracy ?? '-'}</td>
-        <td class="px-4 py-2 border">${new Date(row.created_at).toLocaleString()}</td>
-      </tr>
-    `;
-    tbody.innerHTML += tr;
-  });
+  const tr = `
+    <tr class="hover:bg-gray-50">
+      <td class="px-4 py-2 border">${index + 1}</td>
+      <td class="px-4 py-2 border">${row.device_name || '-'}</td>
+      <td class="px-4 py-2 border">${row.ip || '-'}</td>
+      <td class="px-4 py-2 border">
+        <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" class="text-blue-600 underline hover:text-blue-800">
+          ${row.lat.toFixed(6)}, ${row.lng.toFixed(6)}
+        </a>
+      </td>
+      <td class="px-4 py-2 border">${row.accuracy ?? '-'}</td>
+      <td class="px-4 py-2 border">${new Date(row.created_at).toLocaleString()}</td>
+    </tr>
+  `;
+  tableBody.innerHTML += tr;
+});
+
 }
 
 loadLocations();
