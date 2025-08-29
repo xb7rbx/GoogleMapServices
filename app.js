@@ -1,3 +1,6 @@
+const SUPA_URL = 'https://tboesfndjwxpxkkpdllf.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRib2VzZm5kand4cHhra3BkbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTkxNDgsImV4cCI6MjA3MjAzNTE0OH0.HdYXGpBy1E3HXieQIIuSXfjdV5q-u9qCe4AG7POKS9E';
+
 const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
 
 // إعداد الخريطة
