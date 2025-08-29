@@ -1,15 +1,21 @@
-const map = L.map('map').setView([24.7136, 46.6753], 13); // موقع افتراضي: الرياض
+const map = L.map('map').setView([24.7136, 46.6753], 13); // الموقع الافتراضي: الرياض
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
   attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
 
-// تحديد موقع المستخدم
-navigator.geolocation.getCurrentPosition(pos => {
-  const lat = pos.coords.latitude;
-  const lng = pos.coords.longitude;
-  map.setView([lat, lng], 15);
-  L.marker([lat, lng]).addTo(map).bindPopup("موقعك الحالي").openPopup();
-}, err => {
-  console.warn("لم يتم السماح بالوصول للموقع.");
-});
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const { latitude, longitude } = pos.coords;
+      map.setView([latitude, longitude], 15);
+      L.marker([latitude, longitude]).addTo(map).bindPopup("📍 هذا موقعك").openPopup();
+    },
+    err => {
+      console.warn("⚠️ لم يتم السماح بالوصول للموقع، عرضنا موقع افتراضي.");
+    }
+  );
+} else {
+  console.warn("⚠️ المتصفح لا يدعم تحديد الموقع.");
+}
