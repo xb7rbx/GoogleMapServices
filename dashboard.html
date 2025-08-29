@@ -10,28 +10,62 @@
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans">
 
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-bold mb-6 text-center text-blue-700">📍 سجل المواقع</h1>
+  <div class="max-w-full px-2 sm:px-4 py-6">
+    <h1 class="text-xl sm:text-2xl font-bold mb-6 text-center text-blue-700">📍 سجل المواقع</h1>
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
       <table class="w-full border-collapse table-auto">
         <thead>
-          <tr class="bg-gray-100 text-sm sm:text-base">
-            <th class="px-4 py-2 border">#</th>
-            <th class="px-4 py-2 border">اسم الجهاز</th>
-            <th class="px-4 py-2 border">IP</th>
-            <th class="px-4 py-2 border">الموقع (Google Map)</th>
-            <th class="px-4 py-2 border">الدقة</th>
-            <th class="px-4 py-2 border">تاريخ الإضافة</th>
+          <tr class="bg-gray-100 text-xs sm:text-sm">
+            <th class="px-2 py-2 border whitespace-nowrap">#</th>
+            <th class="px-2 py-2 border whitespace-nowrap">اسم الجهاز</th>
+            <th class="px-2 py-2 border whitespace-nowrap">IP</th>
+            <th class="px-2 py-2 border whitespace-nowrap">الموقع</th>
+            <th class="px-2 py-2 border whitespace-nowrap">الدقة</th>
+            <th class="px-2 py-2 border whitespace-nowrap">تاريخ الإضافة</th>
           </tr>
         </thead>
-        <tbody id="tableBody" class="text-center text-sm sm:text-base">
-          <!-- يتم تعبئة البيانات هنا من JavaScript -->
+        <tbody id="tableBody" class="text-center text-xs sm:text-sm">
+          <!-- سيتم تعبئته من JavaScript -->
         </tbody>
       </table>
     </div>
   </div>
 
-  <script src="dashboard.js"></script>
+  <script>
+    const SUPA_URL = 'https://tboesfndjwxpxkkpdllf.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRib2VzZm5kand4cHhra3BkbGxmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY0NTkxNDgsImV4cCI6MjA3MjAzNTE0OH0.HdYXGpBy1E3HXieQIIuSXfjdV5q-u9qCe4AG7POKS9E';
+    const supabase = window.supabase.createClient(SUPA_URL, SUPA_KEY);
+
+    async function loadData() {
+      const { data, error } = await supabase.from('locations').select('*').order('id', { ascending: false });
+      const tableBody = document.getElementById('tableBody');
+
+      if (error) {
+        tableBody.innerHTML = `<tr><td colspan="6" class="text-red-600 py-4">حدث خطأ في جلب البيانات</td></tr>`;
+        return;
+      }
+
+      data.forEach((row, index) => {
+        const tr = `
+          <tr class="hover:bg-gray-50">
+            <td class="px-2 py-2 border">${index + 1}</td>
+            <td class="px-2 py-2 border max-w-xs line-clamp-2 break-words text-right">${row.device_name || '-'}</td>
+            <td class="px-2 py-2 border">${row.ip || '-'}</td>
+            <td class="px-2 py-2 border">
+              <a href="https://www.google.com/maps?q=${row.lat},${row.lng}" target="_blank" class="text-blue-600 underline hover:text-blue-800">
+                ${row.lat.toFixed(6)}, ${row.lng.toFixed(6)}
+              </a>
+            </td>
+            <td class="px-2 py-2 border">${row.accuracy ?? '-'}</td>
+            <td class="px-2 py-2 border">${new Date(row.created_at).toLocaleString('ar-EG')}</td>
+          </tr>
+        `;
+        tableBody.innerHTML += tr;
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
 </body>
 </html>
