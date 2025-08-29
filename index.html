@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>مشاركة الموقع</title>
 
-  <!-- Content Security Policy -->
+  <!-- سياسة الحماية CSP -->
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self';
                  script-src 'self' https://cdn.jsdelivr.net https://unpkg.com;
                  connect-src 'self' https://tboesfndjwxpxkkpdllf.supabase.co https://api.ipify.org;
                  style-src 'self' 'unsafe-inline' https://unpkg.com;
-                 img-src 'self' data: https://{s}.tile.openstreetmap.org;">
-  
+                 img-src 'self' data: https://*.tile.openstreetmap.org;">
+
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -28,18 +28,8 @@
       width: 100vw;
     }
 
-    /* Optional: fallback message while loading */
     #s {
       display: none;
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px #0002;
-      z-index: 999;
     }
   </style>
 </head>
@@ -48,33 +38,12 @@
   <div id="s">يتم تحميل الصفحة…</div>
   <div id="map"></div>
 
-  <!-- Supabase JS -->
+  <!-- مكتبات خارجية -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- خريطة Leaflet -->
-  <script>
-    const map = L.map('map').setView([24.7136, 46.6753], 13); // موقع مبدئي: الرياض
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    // تحديد موقع المستخدم
-    navigator.geolocation.getCurrentPosition(pos => {
-      const lat = pos.coords.latitude;
-      const lng = pos.coords.longitude;
-      map.setView([lat, lng], 15);
-      L.marker([lat, lng]).addTo(map).bindPopup("موقعك الحالي").openPopup();
-    }, err => {
-      console.warn("لم يتم السماح بالوصول للموقع.");
-    });
-  </script>
-
-  <!-- وظائفك في الخلفية -->
+  <!-- سكربتات -->
   <script src="app.js"></script>
-
+  <script src="map.js"></script> <!-- نضيف هذا الملف الجديد -->
 </body>
 </html>
