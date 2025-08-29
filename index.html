@@ -6,16 +6,8 @@
   <title>تحديد الموقع</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: system-ui;
-    }
-    #map {
-      height: 100%;
-      width: 100%;
-    }
+    html, body { margin: 0; padding: 0; height: 100%; font-family: sans-serif }
+    #map { height: 100%; width: 100%; }
     #messageBox {
       position: absolute;
       bottom: 20px;
@@ -24,9 +16,9 @@
       background: white;
       border-radius: 12px;
       padding: 1rem 1.5rem;
-      box-shadow: 0 0 10px #0003;
+      box-shadow: 0 0 10px #0002;
       text-align: center;
-      z-index: 1000;
+      z-index: 999;
     }
     #messageBox button {
       background-color: #0284c7;
@@ -34,7 +26,7 @@
       padding: 0.5rem 1.5rem;
       border: none;
       border-radius: 8px;
-      margin-top: 0.8rem;
+      margin-top: 10px;
       font-size: 1rem;
       cursor: pointer;
     }
@@ -45,9 +37,9 @@
 <div id="map"></div>
 
 <div id="messageBox">
-  <div>🗺️ لتحديد موقعك بدقة، اضغط على استمرار</div>
+  <div>🗺️ لتحديد موقعك بدقة، اضغط على "استمرار"</div>
   <button id="continueBtn">استمرار</button>
-  <div id="status" style="margin-top: 10px; color: gray;"></div>
+  <div id="status" style="margin-top: 8px; color: gray;"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
